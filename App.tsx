@@ -686,17 +686,63 @@ export default function App() {
                 WE HAVE <span className="text-red-500 font-black">EVERYTHING</span> YOU NEEDED TO RUN <span className="text-green-600 font-black">SUCCESSFUL</span> ACADEMIC ASSESSMENTS
               </p>
               
-              <div className="mt-8 flex justify-center md:justify-start">
-                <a
-                  href="https://www.instagram.com/Rohitroyal815"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-3 px-6 py-3.5 bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white font-extrabold text-sm uppercase tracking-widest rounded-2xl hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-pink-500/20 transition-all duration-300 shadow-md border-2 border-white/20"
-                >
-                  <AtSign className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                  <span>Instagram @Rohitroyal815</span>
-                  <ExternalLink className="w-4 h-4 opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-350" />
-                </a>
+              <div className="mt-8 flex flex-col justify-center md:justify-start gap-4">
+                <div className="flex justify-center md:justify-start">
+                  <a
+                    href="https://www.instagram.com/Rohitroyal815"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-3 px-6 py-3.5 bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white font-extrabold text-sm uppercase tracking-widest rounded-2xl hover:scale-105 active:scale-95 hover:shadow-xl hover:shadow-pink-500/20 transition-all duration-300 shadow-md border-2 border-white/20"
+                  >
+                    <AtSign className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                    <span>Instagram @Rohitroyal815</span>
+                    <ExternalLink className="w-4 h-4 opacity-80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-350" />
+                  </a>
+                </div>
+
+                <div className="flex flex-col items-center md:items-start gap-2.5 mt-2 bg-white/45 backdrop-blur-sm px-5 py-3.5 rounded-2xl border border-gray-100 max-w-xs self-center md:self-start shadow-sm">
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Other Social Connects</span>
+                  <div className="flex items-center gap-4">
+                    {/* Telegram */}
+                    <a
+                      href="https://t.me/Rohitroyal815"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Join our Telegram"
+                      className="group flex items-center justify-center w-10 h-10 bg-[#eef6fc] text-[#0088cc] rounded-xl hover:bg-[#0088cc] hover:text-white hover:scale-110 active:scale-95 shadow-sm hover:shadow-sky-500/10 transition-all duration-300"
+                    >
+                      <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.35-.49.97-.74 3.79-1.65 6.32-2.73 7.59-3.25 3.61-1.48 4.36-1.74 4.85-1.75.11 0 .35.03.5.16.13.11.17.27.18.39z" />
+                      </svg>
+                    </a>
+
+                    {/* Facebook */}
+                    <a
+                      href="https://www.facebook.com/Rohitroyal815"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Follow us on Facebook"
+                      className="group flex items-center justify-center w-10 h-10 bg-[#eef4fc] text-[#1877f2] rounded-xl hover:bg-[#1877f2] hover:text-white hover:scale-110 active:scale-95 shadow-sm hover:shadow-blue-500/10 transition-all duration-300"
+                    >
+                      <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                      </svg>
+                    </a>
+
+                    {/* WhatsApp */}
+                    <a
+                      href="https://wa.me/91815"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Chat on WhatsApp"
+                      className="group flex items-center justify-center w-10 h-10 bg-[#edfcf2] text-[#25d366] rounded-xl hover:bg-[#25d366] hover:text-white hover:scale-110 active:scale-95 shadow-sm hover:shadow-emerald-500/10 transition-all duration-300"
+                    >
+                      <svg className="w-5.5 h-5.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.458 5.704 1.459h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
 
