@@ -179,12 +179,7 @@ export default function App() {
 
   // 2. Real-time listener for student results - Restricted to ADMIN users only to prevent unauthorized database calls
   useEffect(() => {
-    if (!isFirebaseConfigured || !db || role !== UserRole.ADMIN || authLoading) return;
-
-    // Only subscribe to results if we have an active, authenticated admin session
-    if (!currentAuthUser || currentAuthUser.email !== 'rohtjan4@gmail.com') {
-      return;
-    }
+    if (!isFirebaseConfigured || !db || role !== UserRole.ADMIN || !adminAuthenticated) return;
 
     const resultsCollectionRef = collection(db, 'results');
     const unsubscribeResults = onSnapshot(resultsCollectionRef, (querySnap) => {
@@ -201,7 +196,7 @@ export default function App() {
     return () => {
       unsubscribeResults();
     };
-  }, [role, currentAuthUser, authLoading]);
+  }, [role, adminAuthenticated]);
 
   const updateFirebaseConfig = async (fields: { questions?: Question[], settings?: TestSettings, passcode?: string, securityQuestion?: string, securityAnswer?: string }) => {
     if (isFirebaseConfigured && db) {
