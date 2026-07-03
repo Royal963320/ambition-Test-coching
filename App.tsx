@@ -4,7 +4,7 @@ import { AtSign, ExternalLink, Eye, EyeOff, Sun, Moon } from 'lucide-react';
 import { UserRole, AppState, Question, TestSettings, StudentResult } from './types';
 import { AdminPanel } from './components/AdminPanel';
 import { StudentTest } from './components/StudentTest';
-import { db, isFirebaseConfigured, auth, googleProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, sendEmailVerification, updateProfile, handleFirestoreError, OperationType } from './services/firebase';
+import { db, isFirebaseConfigured, auth, googleProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, sendEmailVerification, updateProfile, handleFirestoreError, OperationType } from './services/firebase';
 import { doc, onSnapshot, setDoc, collection, deleteDoc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -117,6 +117,38 @@ export default function App() {
       setAuthLoading(false);
       return;
     }
+
+    // Capture the redirect sign-in result on page load
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result && result.user) {
+          const user = result.user;
+          if (user.email === 'rohtjan4@gmail.com') {
+            setAdminAuthenticated(true);
+            setRole(UserRole.ADMIN);
+            setAppState(AppState.DASHBOARD);
+            showNotify("Teacher Access Granted via Google! 👨‍🏫");
+          } else {
+            showNotify(`Welcome back, ${user.displayName || 'Student'}! 🌟`);
+            setCurrentStudent((prev: any) => ({ 
+              ...prev, 
+              name: user.displayName || 'Google Student',
+              studentId: '' 
+            }));
+            setRole(UserRole.STUDENT);
+            setAppState(AppState.STUDENT_INFO);
+          }
+        }
+      })
+      .catch((error: any) => {
+        console.error("Redirect Auth Error:", error);
+        if (error.code === 'auth/unauthorized-domain') {
+          showNotify(`Unauthorized Domain! Please add "${window.location.hostname}" in Firebase Console.`, "error");
+        } else {
+          showNotify(error.message || "Failed Google Sign-In redirect.", "error");
+        }
+      });
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentAuthUser(user);
       setAuthLoading(false);
@@ -267,6 +299,21 @@ export default function App() {
 
   const handleGoogleSignIn = async () => {
     if (isFirebaseConfigured && auth) {
+      // On mobile or inside webviews/iframes, popups fail or are blocked.
+      // We can use redirect directly, or attempt popup first and fallback to redirect.
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        try {
+          showNotify("Redirecting to Google Login... 🚀");
+          await signInWithRedirect(auth, googleProvider);
+        } catch (error: any) {
+          console.error("Google Redirect Auth error:", error);
+          showNotify("Redirect sign-in failed. Try Email Login instead.", "error");
+        }
+        return;
+      }
+
       try {
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
@@ -277,7 +324,7 @@ export default function App() {
           showNotify("Teacher Access Granted via Google! 👨‍🏫");
         } else {
           showNotify(`Welcome back, ${user.displayName || 'Student'}! 🌟`);
-          setCurrentStudent(prev => ({ 
+          setCurrentStudent((prev: any) => ({ 
             ...prev, 
             name: user.displayName || 'Google Student',
             studentId: '' // Let them verify/provide SPAxxx ID next
@@ -287,11 +334,18 @@ export default function App() {
         }
       } catch (error: any) {
         console.error("Google Auth error:", error);
-        if (error.code === 'auth/popup-blocked') {
-          showNotify("Popup Blocked! Please open this app in a new tab or allow popups.", "error");
+        if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+          // Fallback to redirect
+          try {
+            showNotify("Popup blocked/closed. Trying Redirect Login... 🚀");
+            await signInWithRedirect(auth, googleProvider);
+          } catch (redirErr) {
+            console.error("Google Redirect Auth fallback error:", redirErr);
+            showNotify("Google login popup failed. Try enabling popups or use Email Login.", "error");
+          }
         } else if (error.code === 'auth/unauthorized-domain') {
           showNotify(`Unauthorized Domain! Please add "${window.location.hostname}" to Firebase Console -> Authentication -> Settings -> Authorized Domains.`, "error");
-          alert(`Firebase Authentication - Unauthorized Domain!\n\nTo allow Google popup login here:\n1. Open: https://console.firebase.google.com/\n2. Go to: Authentication -> Settings -> Authorized Domains\n3. Click "Add domain" and enter:\n\n${window.location.hostname}\n\nOnce added, Google Sign-In will begin working instantly!`);
+          alert(`Firebase Authentication - Unauthorized Domain!\n\nTo allow Google login here:\n1. Open: https://console.firebase.google.com/\n2. Go to: Authentication -> Settings -> Authorized Domains\n3. Click "Add domain" and enter:\n\n${window.location.hostname}\n\nOnce added, Google Sign-In will begin working instantly!`);
         } else {
           showNotify(error.message || "Failed Google Sign-In. Try Email Login instead.", "error");
         }
