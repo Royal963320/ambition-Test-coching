@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Catch-all default deny (Zero-Trust)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Checking if the user is authenticated in Firebase
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Checking if the user has a verified email address
+    function isEmailVerified() {
+      return isSignedIn() && (request.auth.token.email_verified == true);
+    }
+
+    // Checking administrative access by verified developer email
+    function isAdmin() {
+      return isSignedIn() && (request.auth.token.email == 'rohtjan4@gmail.com');
+    }
+
+    // Config: Examination settings and questions
+    match /config/activeExam {
+      // Publicly readable so students can see instructions, settings & questions
+      allow read: if true;
+      // Only the verified admin can update exam configurations
+      allow write: if isAdmin();
+    }
+
+    // Results: Student submissions
+    match /results/{resultId} {
+      // Authenticated students can submit/create their exam results
+      allow create: if isSignedIn();
+      // Only the administrative account can read the results dashboard, delete or modify results
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Usernames: Map for username-to-email login
+    match /usernames/{username} {
+      // Allows individual lookup for login and pwd resets (Prevents full-list queries)
+      allow get: if true;
+      // Newly registering users can reserve their unique username mapping
+      allow create: if isSignedIn();
+      // Restrict edits/deletions of mapped usernames to admin only
+      allow update, delete: if isAdmin();
+    }
+  }
+}

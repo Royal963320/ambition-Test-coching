@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "ExamConfig": {
+      "title": "ExamConfig",
+      "description": "Active exam setup and questions",
+      "type": "object",
+      "properties": {
+        "passcode": { "type": "string", "description": "Admin/Teacher login passcode" },
+        "questions": { "type": "array", "description": "List of active exam questions" },
+        "settings": { "type": "object", "description": "Exam rule settings" },
+        "securityQuestion": { "type": "string", "description": "Security question/hint for recovery" },
+        "securityAnswer": { "type": "string", "description": "Security answer for recovery" }
+      },
+      "required": ["passcode", "questions", "settings"]
+    },
+    "StudentResult": {
+      "title": "StudentResult",
+      "description": "Submitted exam result of a student",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "name": { "type": "string" },
+        "shift": { "type": "string" },
+        "testMode": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "score": { "type": "number" },
+        "totalPoints": { "type": "number" },
+        "answers": { "type": "object" },
+        "wpm": { "type": "number" },
+        "accuracy": { "type": "number" }
+      },
+      "required": ["id", "studentId", "name", "shift", "testMode", "timestamp"]
+    },
+    "UsernameMapping": {
+      "title": "UsernameMapping",
+      "description": "Mapping from custom username to email and uid",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "uid": { "type": "string" }
+      },
+      "required": ["email", "uid"]
+    }
+  },
+  "firestore": {
+    "/config/activeExam": {
+      "schema": "ExamConfig",
+      "description": "Main examination configurations"
+    },
+    "/results/{resultId}": {
+      "schema": "StudentResult",
+      "description": "Individual student test score entries"
+    },
+    "/usernames/{username}": {
+      "schema": "UsernameMapping",
+      "description": "Username mappings collection for logging in with username"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Coaching Test Maker projrct 1",
+  "description": "A tool for coaching centers to generate offline-ready text-based MCQ tests using Gemini AI. Generate, customize, and print exam papers instantly.",
+  "requestFramePermissions": []
+}
