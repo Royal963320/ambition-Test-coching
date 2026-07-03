@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { AtSign, ExternalLink, Eye, EyeOff } from 'lucide-react';
+import { AtSign, ExternalLink, Eye, EyeOff, Sun, Moon } from 'lucide-react';
 import { UserRole, AppState, Question, TestSettings, StudentResult } from './types';
 import { AdminPanel } from './components/AdminPanel';
 import { StudentTest } from './components/StudentTest';
@@ -62,6 +62,19 @@ export default function App() {
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const [showNewRecoveredPasscode, setShowNewRecoveredPasscode] = useState(false);
   const [showPasscode, setShowPasscode] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('app_theme');
+    return (saved as 'light' | 'dark') || 'light';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('app_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   useEffect(() => {
     localStorage.setItem('app_user_role', role);
@@ -623,7 +636,21 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans flex flex-col antialiased">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-gray-900 dark:text-slate-100 font-sans flex flex-col antialiased transition-colors duration-300">
+      {/* Theme Toggle Button */}
+      <button
+        type="button"
+        onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+        className="fixed top-4 right-4 z-[250] p-3 rounded-2xl shadow-xl border border-gray-200/50 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-gray-700 dark:text-slate-300 hover:scale-105 active:scale-95 hover:shadow-brand-500/10 dark:hover:shadow-brand-500/20 transition-all duration-300 cursor-pointer flex items-center justify-center"
+        aria-label="Toggle Theme"
+        title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+      >
+        {theme === 'light' ? (
+          <Moon className="w-5 h-5 text-indigo-600" />
+        ) : (
+          <Sun className="w-5 h-5 text-amber-400" />
+        )}
+      </button>
       <style>{`
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
         .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
@@ -642,7 +669,6 @@ export default function App() {
         /* Highlight Global Fonts */
         body {
           font-weight: 500;
-          color: #0f172a;
         }
         h1, h2, h3, h4, h5, h6 {
           font-weight: 900 !important;
@@ -661,10 +687,10 @@ export default function App() {
 
       <div className="flex-1">
         {appState === AppState.WELCOME && (
-          <div className="min-h-screen bg-[#f3f7fc] relative flex flex-col md:flex-row items-center justify-between overflow-hidden p-6 md:p-12 lg:p-24">
+          <div className="min-h-screen bg-[#f3f7fc] dark:bg-slate-950 relative flex flex-col md:flex-row items-center justify-between overflow-hidden p-6 md:p-12 lg:p-24 transition-colors duration-300">
             
             {/* Background SMM Waves matching the image */}
-            <div className="absolute inset-x-0 bottom-0 pointer-events-none z-0">
+            <div className="absolute inset-x-0 bottom-0 pointer-events-none z-0 opacity-100 dark:opacity-20">
               <svg className="w-full h-48 md:h-64 lg:h-80" viewBox="0 0 1440 320" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
                 <path d="M0,192L120,208C240,224,480,256,720,240C960,224,1200,160,1320,128L1440,96L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z" fill="#3b82f6" fillOpacity="0.4" />
                 <path d="M0,256L120,245.3C240,235,480,213,720,218.7C960,224,1200,256,1320,272L1440,288L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z" fill="#1d6ce5" fillOpacity="0.7" />
@@ -674,7 +700,7 @@ export default function App() {
 
             {/* Left Column - Ambition Test Portal Branding */}
             <div className="max-w-2xl w-full z-10 text-center md:text-left mb-12 md:mb-0 select-none animate-pop">
-              <h1 className="text-5xl md:text-6xl font-black text-[#112347] mb-4 tracking-tighter leading-none">
+              <h1 className="text-5xl md:text-6xl font-black text-[#112347] dark:text-white mb-4 tracking-tighter leading-none">
                 Ambition Test Portal.
               </h1>
               <div className="inline-block mt-2 mb-6">
@@ -682,7 +708,7 @@ export default function App() {
                   EXAM IS LIVE
                 </span>
               </div>
-              <p className="text-base md:text-lg font-extrabold text-[#3a4d70] max-w-lg mt-4 leading-relaxed tracking-wide uppercase">
+              <p className="text-base md:text-lg font-extrabold text-[#3a4d70] dark:text-slate-350 max-w-lg mt-4 leading-relaxed tracking-wide uppercase">
                 WE HAVE <span className="text-red-500 font-black">EVERYTHING</span> YOU NEEDED TO RUN <span className="text-green-600 font-black">SUCCESSFUL</span> ACADEMIC ASSESSMENTS
               </p>
               
@@ -700,8 +726,8 @@ export default function App() {
                   </a>
                 </div>
 
-                <div className="flex flex-col items-center md:items-start gap-2.5 mt-2 bg-white/45 backdrop-blur-sm px-5 py-3.5 rounded-2xl border border-gray-100 max-w-xs self-center md:self-start shadow-sm">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Other Social Connects</span>
+                <div className="flex flex-col items-center md:items-start gap-2.5 mt-2 bg-white/45 dark:bg-slate-900/40 backdrop-blur-sm px-5 py-3.5 rounded-2xl border border-gray-100 dark:border-slate-800 max-w-xs self-center md:self-start shadow-sm">
+                  <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em]">Other Social Connects</span>
                   <div className="flex items-center gap-4">
                     {/* Telegram */}
                     <a
@@ -747,17 +773,17 @@ export default function App() {
             </div>
 
             {/* Right Column - SMM Login Card Container */}
-            <div className="max-w-md w-full bg-white rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.08)] p-8 md:p-10 z-10 border border-gray-100 animate-pop">
+            <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.08)] dark:shadow-[0_15px_50px_rgba(0,0,0,0.4)] p-8 md:p-10 z-10 border border-gray-100 dark:border-slate-800 animate-pop transition-colors duration-300">
               {!isSignup ? (
                 // SIGN IN FORM
                 <form onSubmit={handlePasswordLogin} id="signin-form" className="space-y-6">
                   <div>
-                    <label className="block text-[13px] font-extrabold text-[#526a92] mb-2 uppercase tracking-wider">
+                    <label className="block text-[13px] font-extrabold text-[#526a92] dark:text-slate-400 mb-2 uppercase tracking-wider">
                       Username / Email
                     </label>
                     <input
                       type="text"
-                      className="w-full px-5 py-4 bg-[#f2f7f3] border-0 rounded-xl font-bold text-gray-800 focus:ring-2 focus:ring-brand-500/30 focus:bg-white outline-none transition-all placeholder:text-gray-400"
+                      className="w-full px-5 py-4 bg-[#f2f7f3] dark:bg-slate-800 border-0 rounded-xl font-bold text-gray-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-slate-700 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500"
                       placeholder="Enter username or email"
                       value={usernameInput}
                       onChange={(e) => setUsernameInput(e.target.value)}
@@ -766,13 +792,13 @@ export default function App() {
 
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <label className="text-[13px] font-extrabold text-[#526a92] uppercase tracking-wider">
+                      <label className="text-[13px] font-extrabold text-[#526a92] dark:text-slate-400 uppercase tracking-wider">
                         Password
                       </label>
                       <button
                         type="button"
                         onClick={handlePasswordLost}
-                        className="text-[11px] font-extrabold text-brand-600 hover:text-brand-800 transition-colors uppercase tracking-wider"
+                        className="text-[11px] font-extrabold text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 transition-colors uppercase tracking-wider"
                       >
                         Password Lost?
                       </button>
@@ -780,7 +806,7 @@ export default function App() {
                     <div className="relative">
                       <input
                         type={showPassword ? "text" : "password"}
-                        className="w-full pl-5 pr-12 py-4 bg-[#f2f7f3] border-0 rounded-xl font-bold text-gray-800 focus:ring-2 focus:ring-brand-500/30 focus:bg-white outline-none transition-all placeholder:text-gray-400"
+                        className="w-full pl-5 pr-12 py-4 bg-[#f2f7f3] dark:bg-slate-800 border-0 rounded-xl font-bold text-gray-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-slate-700 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500"
                         placeholder="Enter password"
                         value={passwordInput}
                         onChange={(e) => setPasswordInput(e.target.value)}
@@ -801,9 +827,9 @@ export default function App() {
                       id="remember"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-5 h-5 text-brand-600 border-gray-300 rounded focus:ring-brand-500/30"
+                      className="w-5 h-5 text-brand-600 border-gray-300 dark:border-slate-700 rounded focus:ring-brand-500/30"
                     />
-                    <label htmlFor="remember" className="ml-3 text-[13px] font-extrabold text-[#526a92] uppercase tracking-wider cursor-pointer">
+                    <label htmlFor="remember" className="ml-3 text-[13px] font-extrabold text-[#526a92] dark:text-slate-400 uppercase tracking-wider cursor-pointer">
                       Remember me
                     </label>
                   </div>
@@ -816,15 +842,15 @@ export default function App() {
                   </button>
 
                   <div className="relative flex py-2 items-center">
-                    <div className="flex-grow border-t border-gray-200"></div>
+                    <div className="flex-grow border-t border-gray-200 dark:border-slate-800"></div>
                     <span className="flex-shrink mx-4 text-gray-400 text-xs font-black uppercase tracking-wider">or</span>
-                    <div className="flex-grow border-t border-gray-200"></div>
+                    <div className="flex-grow border-t border-gray-200 dark:border-slate-800"></div>
                   </div>
 
                   <button
                     type="button"
                     onClick={handleGoogleSignIn}
-                    className="w-full py-3.5 bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-200 rounded-xl font-black text-sm shadow transition-all uppercase tracking-widest active:scale-95 flex items-center justify-center gap-3"
+                    className="w-full py-3.5 bg-white dark:bg-slate-800 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-200 border-2 border-gray-200 dark:border-slate-700 rounded-xl font-black text-sm shadow transition-all uppercase tracking-widest active:scale-95 flex items-center justify-center gap-3"
                   >
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -835,12 +861,12 @@ export default function App() {
                     <span>Login with Google</span>
                   </button>
 
-                  <div className="text-center text-sm font-extrabold text-[#526a92] mt-4 uppercase tracking-wider">
+                  <div className="text-center text-sm font-extrabold text-[#526a92] dark:text-slate-400 mt-4 uppercase tracking-wider">
                     Don't have an account?{" "}
                     <button
                       type="button"
                       onClick={() => setIsSignup(true)}
-                      className="text-[#0026db] text-[16px] hover:underline font-black outline-none"
+                      className="text-[#0026db] dark:text-brand-400 text-[16px] hover:underline font-black outline-none"
                     >
                       Signup
                     </button>
@@ -852,12 +878,12 @@ export default function App() {
                 // SIGN UP FORM
                 <form onSubmit={handleSignUpSubmit} id="signup-form" className="space-y-6">
                   <div>
-                    <label className="block text-[13px] font-extrabold text-[#526a92] mb-2 uppercase tracking-wider">
+                    <label className="block text-[13px] font-extrabold text-[#526a92] dark:text-slate-400 mb-2 uppercase tracking-wider">
                       Username
                     </label>
                     <input
                       type="text"
-                      className="w-full px-5 py-4 bg-[#f2f7f3] border-0 rounded-xl font-bold text-gray-800 focus:ring-2 focus:ring-brand-500/30 focus:bg-white outline-none transition-all placeholder:text-gray-400"
+                      className="w-full px-5 py-4 bg-[#f2f7f3] dark:bg-slate-800 border-0 rounded-xl font-bold text-gray-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-slate-700 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500"
                       placeholder="Pick a username"
                       value={signUpUsername}
                       onChange={(e) => setSignUpUsername(e.target.value)}
@@ -865,12 +891,12 @@ export default function App() {
                   </div>
 
                   <div>
-                    <label className="block text-[13px] font-extrabold text-[#526a92] mb-2 uppercase tracking-wider">
+                    <label className="block text-[13px] font-extrabold text-[#526a92] dark:text-slate-400 mb-2 uppercase tracking-wider">
                       Email address
                     </label>
                     <input
                       type="email"
-                      className="w-full px-5 py-4 bg-[#f2f7f3] border-0 rounded-xl font-bold text-gray-800 focus:ring-2 focus:ring-brand-500/30 focus:bg-white outline-none transition-all placeholder:text-gray-400"
+                      className="w-full px-5 py-4 bg-[#f2f7f3] dark:bg-slate-800 border-0 rounded-xl font-bold text-gray-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-slate-700 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500"
                       placeholder="Enter registered email"
                       value={signUpEmail}
                       onChange={(e) => setSignUpEmail(e.target.value)}
@@ -878,13 +904,13 @@ export default function App() {
                   </div>
 
                   <div>
-                    <label className="block text-[13px] font-extrabold text-[#526a92] mb-2 uppercase tracking-wider">
+                    <label className="block text-[13px] font-extrabold text-[#526a92] dark:text-slate-400 mb-2 uppercase tracking-wider">
                       Password
                     </label>
                     <div className="relative">
                       <input
                         type={showSignUpPassword ? "text" : "password"}
-                        className="w-full pl-5 pr-12 py-4 bg-[#f2f7f3] border-0 rounded-xl font-bold text-gray-800 focus:ring-2 focus:ring-brand-500/30 focus:bg-white outline-none transition-all placeholder:text-gray-400"
+                        className="w-full pl-5 pr-12 py-4 bg-[#f2f7f3] dark:bg-slate-800 border-0 rounded-xl font-bold text-gray-800 dark:text-slate-100 focus:ring-2 focus:ring-brand-500/30 focus:bg-white dark:focus:bg-slate-700 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500"
                         placeholder="Choose password"
                         value={signUpPassword}
                         onChange={(e) => setSignUpPassword(e.target.value)}
@@ -906,12 +932,12 @@ export default function App() {
                     Signup
                   </button>
 
-                  <div className="text-center text-sm font-extrabold text-[#526a92] mt-4 uppercase tracking-wider">
+                  <div className="text-center text-sm font-extrabold text-[#526a92] dark:text-slate-400 mt-4 uppercase tracking-wider">
                     Already have an account?{" "}
                     <button
                       type="button"
                       onClick={() => setIsSignup(false)}
-                      className="text-brand-600 hover:underline font-black outline-none text-[18px]"
+                      className="text-brand-600 dark:text-brand-400 hover:underline font-black outline-none text-[18px]"
                     >
                       Sign in
                     </button>
@@ -1109,16 +1135,16 @@ export default function App() {
         )}
 
         {appState === AppState.STUDENT_INFO && (
-          <div className="min-h-screen bg-brand-900 flex items-center justify-center p-4">
-            <div className="max-w-md w-full bg-white rounded-3xl sm:rounded-[3rem] shadow-2xl p-6 sm:p-12 animate-pop">
-              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-1 sm:mb-2 text-center tracking-tight">Student Login</h2>
-              <p className="text-xs sm:text-sm text-gray-500 text-center mb-6 sm:mb-10 font-bold">Please identify yourself to begin.</p>
+          <div className="min-h-screen bg-brand-900 dark:bg-slate-950 flex items-center justify-center p-4 transition-colors duration-300">
+            <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl sm:rounded-[3rem] shadow-2xl p-6 sm:p-12 animate-pop border border-transparent dark:border-slate-800 transition-colors duration-300">
+              <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-slate-100 mb-1 sm:mb-2 text-center tracking-tight">Student Login</h2>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 text-center mb-6 sm:mb-10 font-bold">Please identify yourself to begin.</p>
               <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <label className="text-[9px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1.5 sm:mb-3 block">Student Name</label>
+                  <label className="text-[9px] sm:text-[11px] font-black text-gray-400 dark:text-slate-400 uppercase tracking-[0.2em] mb-1.5 sm:mb-3 block">Student Name</label>
                   <input 
                     type="text" 
-                    className={`w-full p-4 sm:p-5 bg-gray-50 border-2 rounded-xl sm:rounded-2xl font-black text-sm sm:text-lg outline-none transition-all ${currentStudent.name.length > 0 && !validateName(currentStudent.name) ? 'border-red-200 bg-red-50 focus:border-red-500' : 'border-transparent focus:border-brand-500 focus:bg-white'}`} 
+                    className={`w-full p-4 sm:p-5 bg-gray-50 dark:bg-slate-800 border-2 rounded-xl sm:rounded-2xl font-black text-sm sm:text-lg outline-none transition-all ${currentStudent.name.length > 0 && !validateName(currentStudent.name) ? 'border-red-200 bg-red-50 focus:border-red-500' : 'border-transparent dark:border-slate-700 dark:text-slate-100 focus:border-brand-500 focus:bg-white dark:focus:bg-slate-700'}`} 
                     placeholder="STUDENT NAME" 
                     value={currentStudent.name} 
                     onChange={(e) => setCurrentStudent({...currentStudent, name: e.target.value})} 
@@ -1128,12 +1154,12 @@ export default function App() {
                   )}
                 </div>
                 <div>
-                  <label className="text-[9px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 block">Student ID</label>
-                  <p className="text-[8px] sm:text-[9px] font-bold text-gray-400 uppercase mb-1.5 sm:mb-2 tracking-widest">your SPAXXXX id</p>
+                  <label className="text-[9px] sm:text-[11px] font-black text-gray-400 dark:text-slate-400 uppercase tracking-[0.2em] mb-1 block">Student ID</label>
+                  <p className="text-[8px] sm:text-[9px] font-bold text-gray-400 dark:text-slate-400 uppercase mb-1.5 sm:mb-2 tracking-widest">your SPAXXXX id</p>
                   <input 
                       type="text" 
                       maxLength={7}
-                      className={`w-full p-4 sm:p-5 bg-gray-50 border-2 rounded-xl sm:rounded-2xl font-black text-sm sm:text-lg outline-none tracking-widest transition-all ${currentStudent.studentId.length > 0 && !validateStudentId(currentStudent.studentId) ? 'border-red-200 bg-red-50 focus:border-red-500' : 'border-transparent focus:border-brand-500 focus:bg-white'}`} 
+                      className={`w-full p-4 sm:p-5 bg-gray-50 dark:bg-slate-800 border-2 rounded-xl sm:rounded-2xl font-black text-sm sm:text-lg outline-none tracking-widest transition-all ${currentStudent.studentId.length > 0 && !validateStudentId(currentStudent.studentId) ? 'border-red-200 bg-red-50 focus:border-red-500' : 'border-transparent dark:border-slate-700 dark:text-slate-100 focus:border-brand-500 focus:bg-white dark:focus:bg-slate-700'}`} 
                       placeholder="SPAXXXX" 
                       value={currentStudent.studentId.toUpperCase()} 
                       onChange={(e) => setCurrentStudent({...currentStudent, studentId: e.target.value})} 
@@ -1143,10 +1169,10 @@ export default function App() {
                   )}
                 </div>
                 <div>
-                  <label className="text-[9px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1.5 sm:mb-2 block">Class Shift</label>
+                  <label className="text-[9px] sm:text-[11px] font-black text-gray-400 dark:text-slate-400 uppercase tracking-[0.2em] mb-1.5 sm:mb-2 block">Class Shift</label>
                   <div className="grid grid-cols-3 gap-2 sm:gap-3">
                     {['Shift 1', 'Shift 2', 'Shift 3'].map(s => (
-                      <button key={s} onClick={() => setCurrentStudent({...currentStudent, shift: s})} className={`py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest transition-all border-2 ${currentStudent.shift === s ? 'bg-brand-50 border-brand-500 text-brand-700 shadow-md' : 'bg-white border-gray-100 text-gray-400 hover:border-brand-200'}`}>{s}</button>
+                      <button key={s} onClick={() => setCurrentStudent({...currentStudent, shift: s})} className={`py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest transition-all border-2 ${currentStudent.shift === s ? 'bg-brand-50 dark:bg-brand-950/40 border-brand-500 text-brand-700 dark:text-brand-300 shadow-md' : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-400 dark:text-slate-400 hover:border-brand-200 dark:hover:border-slate-650'}`}>{s}</button>
                     ))}
                   </div>
                 </div>
@@ -1159,7 +1185,7 @@ export default function App() {
                 </button>
                 <button 
                   onClick={resetApp} 
-                  className="w-full py-3.5 sm:py-4 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest transition-all mt-3 sm:mt-4 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 sm:py-4 bg-red-50 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest transition-all mt-3 sm:mt-4 flex items-center justify-center gap-2"
                 >
                   🚪 Logout Session
                 </button>
@@ -1169,14 +1195,14 @@ export default function App() {
         )}
 
         {role === UserRole.ADMIN && adminAuthenticated && appState === AppState.DASHBOARD && (
-          <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm no-print">
+          <nav className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 sticky top-0 z-50 shadow-sm no-print transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
               <div className="flex items-center gap-4">
                 <span className="bg-brand-600 text-white p-2 rounded-xl font-black text-xl">A</span>
-                <h2 className="font-black text-gray-900 text-xl tracking-tighter">Ambition Admin Panel</h2>
+                <h2 className="font-black text-gray-900 dark:text-slate-100 text-xl tracking-tighter">Ambition Admin Panel</h2>
               </div>
               <div className="flex gap-4">
-                <button onClick={resetApp} className="text-xs font-black text-gray-500 hover:text-red-600 bg-gray-50 px-6 py-3 rounded-2xl transition-all uppercase tracking-widest">Logout</button>
+                <button onClick={resetApp} className="text-xs font-black text-gray-500 dark:text-slate-400 hover:text-red-600 bg-gray-50 dark:bg-slate-800 px-6 py-3 rounded-2xl transition-all uppercase tracking-widest">Logout</button>
               </div>
             </div>
           </nav>
@@ -1186,6 +1212,7 @@ export default function App() {
           {role === UserRole.ADMIN && adminAuthenticated && appState === AppState.DASHBOARD && (
             <div className="max-w-7xl mx-auto p-4 sm:p-10">
               <AdminPanel 
+                theme={theme}
                 questions={questions}
                 settings={testSettings}
                 results={studentResults}

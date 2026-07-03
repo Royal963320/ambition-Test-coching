@@ -10,6 +10,7 @@ interface AdminPanelProps {
   results: StudentResult[];
   securityQuestion?: string;
   securityAnswer?: string;
+  theme?: 'light' | 'dark';
   onSecurityChange?: (q: string, a: string) => void;
   onSettingsChange: (settings: TestSettings) => void;
   onAddQuestion: (q: Question) => void;
@@ -188,6 +189,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   results,
   securityQuestion = 'What is your school name?',
   securityAnswer = 'ambition',
+  theme = 'light',
   onSecurityChange,
   onSettingsChange,
   onAddQuestion, 
@@ -566,7 +568,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                 <div>
                   <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block">Exam Date (Calendar)</label>
-                  <CustomDatePicker value={settings.date} onChange={(val) => onSettingsChange({...settings, date: val})} />
+                  <CustomDatePicker variant={theme === 'dark' ? 'dark' : 'light'} value={settings.date} onChange={(val) => onSettingsChange({...settings, date: val})} />
                 </div>
 
                 <div>
